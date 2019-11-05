@@ -1,6 +1,8 @@
 import sys
 from time import sleep
+import time
 
+start_time = time.time()
 listy = range(1000)
 ret = 0
 
@@ -16,16 +18,19 @@ def ft_progress(listy):
 	total = len(listy);
 	unit = int(total / 20);
 	for i in listy:
-		print("ETA: " + str(truncate((total * 0.01) - (i * 0.01), 2)) + "s ",
+		elapsed_time = ((time.time()) - (start_time))
+		eta = ((elapsed_time) * (total - i) / (i + 1))
+		print("ETA: ", ' ' if (eta // 10) < 1 else '', str(truncate(eta, 2)) + "s ",
 		"[ " if i < (total // 10) else "[", str(((i * 100)// total)) + '%' + ']' +
 		'[' + (i // unit) * '=' + '>' + ((total - i - 1) // unit) * ' ' + '] ' +
 		str(i) + '/' + str(total) +
-		" | elapsed time " + str(truncate(i * 0.01, 2)) + "s  ",
+		" | elapsed time " + str(truncate(elapsed_time, 2)) + "s  ",
 		end="\r")
 		yield i
+	print("")
 
 for elem in ft_progress(listy):
     ret += (elem + 3) % 5
     sleep(0.01)
-print("---")
+print("...")
 print(ret)
