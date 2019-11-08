@@ -9,10 +9,10 @@ if [ "$1" =  "install-python" ]; then
             echo "Python has been removed."
             curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh &> /dev/null
             bash miniconda.sh -b -p /goinfre/python &> /dev/null
-            export PATH="/goinfre/python/bin:$PATH"
             rm miniconda.sh
             echo "Python has been installed."
         fi
+		export PATH="/goinfre/python/bin:$PATH"
         if [ $answer = "no" ]; then
             echo "exit."
         fi
