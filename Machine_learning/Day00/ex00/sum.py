@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-def sum_(x, f):
+def sum_(x, f = lambda x: x):
 	"""Computes the sum of a non-empty numpy.ndarray onto wich a function is
 		applied element-wise, using a for-loop.
 	Args:
@@ -397,7 +397,16 @@ def vec_linear_mse(x, y, theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
-	pass
+	# y = y.reshape(len(y), 1)
+	theta = theta.reshape(len(theta), 1)
+	# print("X: ", x)
+	# print("Theta : ", theta)
+	elem = (x @ theta) - y
+	# print("elem : ", elem)
+	answer = mat_mat_prod(elem, elem) * (1/y.shape[0])
+	# answer = sum_(answer) / answer.shape[0]
+	print(answer)
+	return answer
 
 X = np.array([
     [ -6, -7, -9],
