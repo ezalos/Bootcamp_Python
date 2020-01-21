@@ -397,14 +397,15 @@ def vec_linear_mse(x, y, theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
-	# y = y.reshape(len(y), 1)
-	theta = theta.reshape(len(theta), 1)
-	# print("X: ", x)
-	# print("Theta : ", theta)
-	elem = (x @ theta) - y
+	# # y = y.reshape(len(y), 1)
+	# theta = theta.reshape(len(theta), 1)
+	# # print("X: ", x)
+	# # print("Theta : ", theta)
+	# elem = (x @ theta) - y
 	# print("elem : ", elem)
-	answer = mat_mat_prod(elem, elem) * (1/y.shape[0])
+	# answer = mat_mat_prod(elem, elem)# * (1/y.shape[0])
 	# answer = sum_(answer) / answer.shape[0]
+	answer = linear_mse(x, y, theta)
 	print(answer)
 	return answer
 
@@ -423,3 +424,44 @@ vec_linear_mse(X, Y, Z)
 W = np.array([0,0,0])
 vec_linear_mse(X, Y, W)
 # 130.71428571
+
+
+def gradient(x, y, theta):
+	"""Computes a gradient vector from three non-empty numpy.ndarray, using
+		a for-loop. The two arrays must have the compatible dimensions.
+	Args:
+		x: has to be an numpy.ndarray, a matrice of dimension m * n.
+		y: has to be an numpy.ndarray, a vector of dimension m * 1.
+		theta: has to be an numpy.ndarray, a vector n * 1.
+	Returns:
+		The gradient as a numpy.ndarray, a vector of dimensions n * 1.
+		None if x, y, or theta are empty numpy.ndarray.
+		None if x, y and theta do not have compatible dimensions.
+	Raises:
+		This function should not raise any Exception.
+	"""
+	my_sum = (mat_mat_prod(x, theta.reshape(theta.shape[0], 1)) - y) / my_sum.shape[0]
+	answer = sum_(my_sum) / my_sum.shape[0]
+	print(answer)
+	return answer
+
+X = np.array([
+    [ -6, -7, -9],
+        [ 13, -2, 14],
+        [ -7, 14, -1],
+        [ -8, -4, 6],
+        [ -5, -9, 6],
+        [ 1, -5, 11],
+        [ 9, -11, 8]])
+Y = np.array([2, 14, -13, 5, 12, 4, -19])
+Z = np.array([3,0.5,-6])
+gradient(X, Y, Z)
+# array([ -37.35714286, 183.14285714, -393.        ])
+
+W = np.array([0,0,0])
+gradient(X, Y, W)
+# array([ 0.85714286, 23.28571429, -26.42857143])
+
+gradient(X, X.dot(Z), Z)
+# grad(X, X.dot(Z), Z)
+# array([0., 0., 0.])
