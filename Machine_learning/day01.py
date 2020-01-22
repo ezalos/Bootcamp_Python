@@ -163,33 +163,59 @@ def fit_(theta, X, Y, alpha, n_cycle):
 	n = X.shape[1]#features
 	coef = alpha / m
 	for iter in range(n_cycle):
-		# print(iter)
-		# print(theta)
 		predict_error = (predict_(theta, X)) - Y
-		# print(predict_error.shape, np.ones((m, m)).shape)
 		new_theta = [theta[0] - sum_(predict_error) * coef]
 		for feature in range(n):
 			correc_theta = sum_(dot(predict_error, X.T[feature])) * coef
 			new_theta.append(theta[feature + 1] - correc_theta)
 		theta = np.array(new_theta)
-		# print("--->",new_theta)
-	print("New theta", theta)
+	# print("New theta", theta)
 	return theta
 
 X1 = np.array([[0.], [1.], [2.], [3.], [4.]])
 Y1 = np.array([[2.], [6.], [10.], [14.], [18.]])
 theta1 = np.array([[1.], [1.]])
 theta1 = fit_(theta1, X1, Y1, alpha = 0.01, n_cycle=2000)
+# print(theta1)
 # array([[2.0023..],[3.9991..]])
-print(predict_(theta1, X1))
+# print(predict_(theta1, X1))
 # array([2.0023..], [6.002..], [10.0007..], [13.99988..], [17.9990..])
 
 X2 = np.array([[0.2, 2., 20.], [0.4, 4., 40.], [0.6, 6., 60.], [0.8, 8.,
 80.]])
 Y2 = np.array([[19.6], [-2.8], [-25.2], [-47.6]])
 theta2 = np.array([[42.], [1.], [1.], [1.]])
-# theta2 = fit_(theta2, X2, Y2, alpha = 0.0005, n_cycle=42000)
-# theta2
+theta2 = fit_(theta2, X2, Y2, alpha = 0.0005, n_cycle=42000)
+# print(theta2)
 # array([[41.99..],[0.97..], [0.77..], [-1.20..]])
-print(predict_(theta2, X2))
+# print(predict_(theta2, X2))
 # array([[19.5937..], [-2.8021..], [-25.1999..], [-47.5978..]])
+
+
+from mylinearregression import MyLinearRegression as MyLR
+
+X1 = np.array([[0.], [1.], [2.], [3.], [4.]])
+Y1 = np.array([[2.], [6.], [10.], [14.], [18.]])
+theta1 = np.array([[1.], [1.]])
+zut = MyLR(theta1)
+print(zut.fit_(theta2, X2, Y2, alpha = 0.0005, n_cycle=42000))
+
+X = np.array([[1., 1., 2., 3.], [5., 8., 13., 21.], [34., 55., 89.,
+144.]])
+Y = np.array([[23.], [48.], [218.]])
+mylr = MyLR([[1.], [1.], [1.], [1.], [1]])
+mylr.predict_(X)
+# array([[8.], [48.], [323.]])
+mylr.cost_elem_(X,Y)
+# array([[37.5], [0.], [1837.5]])
+mylr.cost_(X,Y)
+# 1875.0
+mylr.fit_(X, Y, alpha = 1.6e-4, n_cycle=200000)
+mylr.theta
+# array([[18.023..], [3.323..], [-0.711..], [1.605..], [-0.1113..]])
+mylr.predict_(X)
+# array([[23.499..], [47.385..], [218.079...]])
+mylr.cost_elem_(X,Y)
+# array([[0.041..], [0.062..], [0.001..]])
+mylr.cost_(X,Y)
+# 0.1056..
