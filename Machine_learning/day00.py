@@ -500,9 +500,10 @@ def vec_gradient(x, y, theta):
 	n = x.shape[1]
 	if y.shape[0] != m or theta.shape[0] != n:
 		return None
-	elem = mat_mat_prod(x, theta.reshape(n, 1)) - y
+	theta = theta.reshape(n, 1)
+	elem = mat_mat_prod(x, theta) - y
 	answer = mat_mat_prod(x.T, elem.reshape(m, 1)) / m
-	print(answer)
+	# print(answer)
 	return answer
 
 X = np.array([

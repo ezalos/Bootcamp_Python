@@ -1,4 +1,11 @@
 import numpy as np
+# some_file.py
+import sys
+# sys.path.append('../Day00')
+# insert at 1, 0 is the script path (or '' in REPL)
+# sys.path.insert(1, "/Users/ldevelle/42/Bootcamp_Python/Machine_learning/Day00/sum.py")
+from day00 import vec_gradient
+from day00 import sum_, dot
 
 def prod_n_and_nplus1(n,n_plus_1):
 	elem = n_plus_1[0]
@@ -22,26 +29,17 @@ def predict_(theta, X):
 	Raises:
 		This function should not raise any Exception.
 	"""
-	#X shpae : (m,n)
-	#Theta shape : (n+1, 1)
-	# print("Shape X : ", X.shape)
-	# print(X)
-	# print("Shape Th : ", theta.shape)
-	# print(theta)
 	m = X.shape[0] #nb_features
 	n = X.shape[1] #nb_training_examples
 	nb_features = theta.shape[0] - 1
-	if n != nb_features or (len(theta.shape) > 1 and theta.shape[1] != 1):
-		print("Incompatible dimension match between X and theta.")
+	if n != nb_features:
+		# print("Incompatible dimension match between X and theta.")
 		return None
 	answer = []
-	for i in range(m):
-		# print("Elem : ", i)
+	for feature in range(m):
 		elem = theta[0]
-		for j in range(n):
-			# print(" + X:", X[i][j], " * TH:", theta[j + 1])
-			elem = elem + (X[i][j] * theta[j + 1])
-		# print(" = ", elem)
+		for example in range(n):
+			elem = elem + (X[feature][example] * theta[example + 1])
 		answer.append(elem)
 	pred = np.array(answer)
 	# print(pred)
@@ -134,12 +132,18 @@ cost_(theta2, X2, Y2)
 # 4.238750000000004
 
 
-
 def fit_(theta, X, Y, alpha, n_cycle):
 	"""
 	Description:
 		Performs a fit of Y(output) with respect to X.
 	Args:
+			THETA	(n + 1,	1)
+			X		(m,		n)
+			Y		(m,		1)
+
+			# PREDICT	(n,		1)
+			# N_X		(n,		1)
+			N_THETA	(m + 1,	1)
 		theta: has to be a numpy.ndarray, a vector of dimension (number of
 		features + 1, 1).
 		X: has to be a numpy.ndarray, a matrix of dimension (number of
@@ -155,23 +159,37 @@ def fit_(theta, X, Y, alpha, n_cycle):
 	Raises:
 		This function should not raise any Exception.
 	"""
-
+	m = X.shape[0]#examples
+	n = X.shape[1]#features
+	coef = alpha / m
+	for iter in range(n_cycle):
+		# print(iter)
+		# print(theta)
+		predict_error = (predict_(theta, X)) - Y
+		# print(predict_error.shape, np.ones((m, m)).shape)
+		new_theta = [theta[0] - sum_(predict_error) * coef]
+		for feature in range(n):
+			correc_theta = sum_(dot(predict_error, X.T[feature])) * coef
+			new_theta.append(theta[feature + 1] - correc_theta)
+		theta = np.array(new_theta)
+		# print("--->",new_theta)
+	print("New theta", theta)
+	return theta
 
 X1 = np.array([[0.], [1.], [2.], [3.], [4.]])
 Y1 = np.array([[2.], [6.], [10.], [14.], [18.]])
 theta1 = np.array([[1.], [1.]])
 theta1 = fit_(theta1, X1, Y1, alpha = 0.01, n_cycle=2000)
-theta1
 # array([[2.0023..],[3.9991..]])
-predict_(theta1, X1)
+print(predict_(theta1, X1))
 # array([2.0023..], [6.002..], [10.0007..], [13.99988..], [17.9990..])
 
 X2 = np.array([[0.2, 2., 20.], [0.4, 4., 40.], [0.6, 6., 60.], [0.8, 8.,
 80.]])
-Y2 = np.array([[19.6.], [-2.8], [-25.2], [-47.6]])
+Y2 = np.array([[19.6], [-2.8], [-25.2], [-47.6]])
 theta2 = np.array([[42.], [1.], [1.], [1.]])
-theta2 = fit_(theta2, X2, Y2, alpha = 0.0005, n_cycle=42000)
-theta2
+# theta2 = fit_(theta2, X2, Y2, alpha = 0.0005, n_cycle=42000)
+# theta2
 # array([[41.99..],[0.97..], [0.77..], [-1.20..]])
-predict_(theta2, X2)
+print(predict_(theta2, X2))
 # array([[19.5937..], [-2.8021..], [-25.1999..], [-47.5978..]])
