@@ -135,7 +135,7 @@ cost_(theta2, X2, Y2)
 
 
 
-def fit_(theta, X, Y):
+def fit_(theta, X, Y, alpha, n_cycle):
 	"""
 	Description:
 		Performs a fit of Y(output) with respect to X.
@@ -146,6 +146,8 @@ def fit_(theta, X, Y):
 		training examples, number of features).
 		Y: has to be a numpy.ndarray, a vector of dimension (number of
 		training examples, 1).
+		alpha: un float positif
+		n_cycle: un integer positif
 	Returns:
 		new_theta: numpy.ndarray, a vector of dimension (number of the
 		features +1,1).
@@ -153,3 +155,23 @@ def fit_(theta, X, Y):
 	Raises:
 		This function should not raise any Exception.
 	"""
+
+
+X1 = np.array([[0.], [1.], [2.], [3.], [4.]])
+Y1 = np.array([[2.], [6.], [10.], [14.], [18.]])
+theta1 = np.array([[1.], [1.]])
+theta1 = fit_(theta1, X1, Y1, alpha = 0.01, n_cycle=2000)
+theta1
+# array([[2.0023..],[3.9991..]])
+predict_(theta1, X1)
+# array([2.0023..], [6.002..], [10.0007..], [13.99988..], [17.9990..])
+
+X2 = np.array([[0.2, 2., 20.], [0.4, 4., 40.], [0.6, 6., 60.], [0.8, 8.,
+80.]])
+Y2 = np.array([[19.6.], [-2.8], [-25.2], [-47.6]])
+theta2 = np.array([[42.], [1.], [1.], [1.]])
+theta2 = fit_(theta2, X2, Y2, alpha = 0.0005, n_cycle=42000)
+theta2
+# array([[41.99..],[0.97..], [0.77..], [-1.20..]])
+predict_(theta2, X2)
+# array([[19.5937..], [-2.8021..], [-25.1999..], [-47.5978..]])
