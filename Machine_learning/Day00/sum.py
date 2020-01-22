@@ -222,10 +222,16 @@ def mat_mat_prod(x, y):
 		This function should not raise any Exception.
 	"""
 	m = x.shape[0]
-	n = x.shape[1]
+	if len(x.shape) == 1:
+		n = 1
+	else :
+		n = x.shape[1]
 	if y.shape[0] != n:
 		return None
-	p = y.shape[1]
+	if len(y.shape) == 1:
+		p = 1
+	else:
+		p = y.shape[1]
 	copy_y = y.transpose()
 	answer = []
 	for i in range(m):
@@ -406,7 +412,7 @@ def vec_linear_mse(x, y, theta):
 	# answer = mat_mat_prod(elem, elem)# * (1/y.shape[0])
 	# answer = sum_(answer) / answer.shape[0]
 	answer = linear_mse(x, y, theta)
-	print(answer)
+	# print(answer)
 	return answer
 
 X = np.array([
@@ -440,10 +446,18 @@ def gradient(x, y, theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
-	my_sum = (mat_mat_prod(x, theta.reshape(theta.shape[0], 1)) - y) / my_sum.shape[0]
-	answer = sum_(my_sum) / my_sum.shape[0]
-	print(answer)
-	return answer
+	m = x.shape[0]
+	n = x.shape[1]
+	if y.shape[0] != m or theta.shape[0] != n:
+		return None
+	my_sum = []
+	for i in range(m):
+		my_sum.append((dot(x[i], theta) - y[i]) / m)
+	my_sum = np.array(my_sum).reshape(1, m)
+	# print(my_sum)
+	answer = mat_mat_prod(my_sum, x)
+	# print(answer)
+	return my_sum
 
 X = np.array([
     [ -6, -7, -9],
@@ -464,4 +478,47 @@ gradient(X, Y, W)
 
 gradient(X, X.dot(Z), Z)
 # grad(X, X.dot(Z), Z)
+# array([0., 0., 0.])
+
+
+def vec_gradient(x, y, theta):
+	"""Computes a gradient vector from three non-empty numpy.ndarray,
+		without any for-loop. The three arrays must have the compatible dimensions.
+	Args:
+		x: has to be an numpy.ndarray, a matrice of dimension m * n.
+		y: has to be an numpy.ndarray, a vector of dimension m * 1.
+		theta: has to be an numpy.ndarray, a vector n * 1.
+	Returns:
+		The gradient as a numpy.ndarray, a vector of dimensions n * 1, containg
+		the result of the formula for all j.
+		None if x, y, or theta are empty numpy.ndarray.
+		None if x, y and theta do not have compatible dimensions.
+	Raises:
+		This function should not raise any Exception.
+	"""
+	m = x.shape[0]
+	n = x.shape[1]
+	if y.shape[0] != m or theta.shape[0] != n:
+		return None
+	elem = mat_mat_prod(x, theta.reshape(n, 1)) - y
+	answer = mat_mat_prod(x.T, elem.reshape(m, 1)) / m
+	print(answer)
+	return answer
+
+X = np.array([
+ [ -6, -7, -9],
+ [ 13, -2, 14],
+ [ -7, 14, -1],
+ [ -8, -4, 6],
+ [ -5, -9, 6],
+ [ 1, -5, 11],
+ [ 9, -11, 8]])
+Y = np.array([2, 14, -13, 5, 12, 4, -19])
+Z = np.array([3,0.5,-6])
+vec_gradient(X, Y, Z)
+# array([ -37.35714286, 183.14285714, -393. ])
+W = np.array([0,0,0])
+vec_gradient(X, Y, W)
+# array([ 0.85714286, 23.28571429, -26.42857143])
+vec_gradient(X, X.dot(Z), Z)
 # array([0., 0., 0.])
