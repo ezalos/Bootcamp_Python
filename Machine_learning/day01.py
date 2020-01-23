@@ -161,6 +161,9 @@ def fit_(theta, X, Y, alpha, n_cycle):
 	"""
 	m = X.shape[0]#examples
 	n = X.shape[1]#features
+	# for iter in range(n_cycle):
+	# 	print(iter)
+	# 	theta = theta - (alpha * vec_gradient(X, Y, theta))
 	coef = alpha / m
 	for iter in range(n_cycle):
 		predict_error = (predict_(theta, X)) - Y
@@ -169,7 +172,7 @@ def fit_(theta, X, Y, alpha, n_cycle):
 			correc_theta = sum_(dot(predict_error, X.T[feature])) * coef
 			new_theta.append(theta[feature + 1] - correc_theta)
 		theta = np.array(new_theta)
-	# print("New theta", theta)
+	print("New theta", theta)
 	return theta
 
 X1 = np.array([[0.], [1.], [2.], [3.], [4.]])
