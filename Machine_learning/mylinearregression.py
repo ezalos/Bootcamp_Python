@@ -10,7 +10,44 @@ from day00 import sum_, dot
 
 
 # array([[19.5937..], [-2.8021..], [-25.1999..], [-47.5978..]])
+# import sys
+from time import sleep
+import time
 
+start_time = time.time()
+last_exec = 0
+# listy = range(1000)
+# ret = 0
+
+def truncate(f, n):
+    '''Truncates/pads a float f to n decimal places without rounding'''
+    s = '{}'.format(f)
+    if 'e' in s or 'E' in s:
+        return '{0:.{1}f}'.format(f, n)
+    i, p, d = s.partition('.')
+    return '.'.join([i, (d+'0'*n)[:n]])
+
+def ft_progress(listy):
+	total = len(listy);
+	unit = int(total / 20);
+	for i in listy:
+		# if last_exec
+		elapsed_time = ((time.time()) - (start_time))
+		eta = ((elapsed_time) * (total - i) / (i + 1))
+		print("ETA: ", ' ' if (eta // 10) < 1 else '', str(truncate(eta, 2)) + "s ",
+		"[ " if i < (total // 10) else "[", str(((i * 100)// total)) + '%' + ']' +
+		'[' + (i // unit) * '=' + '>' + ((total - i - 1) // unit) * ' ' + '] ' +
+		str(i) + '/' + str(total) +
+		" | elapsed time " + str(truncate(elapsed_time, 2)) + "s  ",
+		end="\r")
+		yield i
+	print("")
+
+# for elem in ft_progress(listy):
+#     ret += (elem + 3) % 5
+#     sleep(0.01)
+# print("...")
+# print(ret)
 
 class MyLinearRegression():
 	"""
@@ -47,10 +84,10 @@ class MyLinearRegression():
 		Raises:
 			This function should not raise any Exception.
 		"""
-		if isinstance(x, np.ndarray):
+		if not isinstance(x, np.ndarray):
 			return None
 		answer = 0.0
-		for i in range(len(x)):
+		for i in range(x.shape[0]):
 			answer += f(x[i])
 		return (answer)
 
@@ -78,7 +115,7 @@ class MyLinearRegression():
 			answer += x[i] * y[i]
 		return answer
 
-	def mat_mat_prod(x, y):
+	def mat_mat_prod(self, x, y):
 		"""Computes the product of two non-empty numpy.ndarray, using a
 			for-loop. The two arrays must have compatible dimensions.
 		Args:
@@ -110,6 +147,26 @@ class MyLinearRegression():
 		the = np.array(answer)
 		# print(the)
 		return the
+
+	def mse_(self, X, Y):
+		"""
+			X :		m 		* n
+			Y :		m		* p
+			theta :	(n + 1)	* p
+
+			MSE = (1 / m) * (X * TH - Y)^T * (X * TH - Y)
+		"""
+		m = X.shape[0]
+		n = X.shape[1]
+		p = Y.shape[1]
+		theta = self.theta[1:]
+		if m != Y.shape[0] or theta.shape[0] != n or theta.shape[1] != p:
+			return None
+		element = (self.predict_(X) - Y)
+		# print("YOP",element)
+		answer = (1 / m) * self.mat_mat_prod(element.T, element)
+		# print(answer)
+		return sum_(answer)
 
 	def predict_(self, X):
 		"""
@@ -225,7 +282,7 @@ class MyLinearRegression():
 		m = X.shape[0]#examples
 		n = X.shape[1]#features
 		coef = alpha / m
-		for iter in range(n_cycle):
+		for iter in ft_progress(range(n_cycle)):
 			predict_error = (self.predict_(X)) - Y
 			new_theta = [self.theta[0] - sum_(predict_error) * coef]
 			for feature in range(n):
@@ -235,25 +292,25 @@ class MyLinearRegression():
 
 		return self.theta
 
-X = np.array([[1., 1., 2., 3.], [5., 8., 13., 21.], [34., 55., 89.,
-144.]])
-Y = np.array([[23.], [48.], [218.]])
-mylr = MyLinearRegression([[1.], [1.], [1.], [1.], [1]])
-print(mylr.predict_(X))
-# array([[8.], [48.], [323.]])
-print(mylr.cost_elem_(X,Y))
-# array([[37.5], [0.], [1837.5]])
-print(mylr.cost_(X,Y))
-# 1875.0
-print(X)
-print(Y)
-print(mylr.theta)
-mylr.fit_(X, Y, alpha = 1.6e-4, n_cycle=200000)
-print(mylr.theta)
-# array([[18.023..], [3.323..], [-0.711..], [1.605..], [-0.1113..]])
-print(mylr.predict_(X))
-# array([[23.499..], [47.385..], [218.079...]])
-print(mylr.cost_elem_(X,Y))
-# array([[0.041..], [0.062..], [0.001..]])
-print(mylr.cost_(X,Y))
-# 0.1056..
+# X = np.array([[1., 1., 2., 3.], [5., 8., 13., 21.], [34., 55., 89.,
+# 144.]])
+# Y = np.array([[23.], [48.], [218.]])
+# mylr = MyLinearRegression([[1.], [1.], [1.], [1.], [1]])
+# print(mylr.predict_(X))
+# # array([[8.], [48.], [323.]])
+# print(mylr.cost_elem_(X,Y))
+# # array([[37.5], [0.], [1837.5]])
+# print(mylr.cost_(X,Y))
+# # 1875.0
+# print(X)
+# print(Y)
+# print(mylr.theta)
+# mylr.fit_(X, Y, alpha = 1.6e-4, n_cycle=200000)
+# print(mylr.theta)
+# # array([[18.023..], [3.323..], [-0.711..], [1.605..], [-0.1113..]])
+# print(mylr.predict_(X))
+# # array([[23.499..], [47.385..], [218.079...]])
+# print(mylr.cost_elem_(X,Y))
+# # array([[0.041..], [0.062..], [0.001..]])
+# print(mylr.cost_(X,Y))
+# # 0.1056..
